@@ -1,10 +1,12 @@
 const fs = require("fs");
 const express = require("express");
-const e = require("express");
+const morgan = require("morgan");
 
 const app = express();
 
-//MiddleWare
+//1) MiddleWare
+
+app.use(morgan("dev"));
 app.use(express.json());
 
 // Creating Own MiddleWare
@@ -33,6 +35,8 @@ app.use((req, res, next) => {
 // })
 
 const tours = JSON.parse(fs.readFileSync("./dev-data/data/tours-simple.json"));
+
+// 2) Route Handlers
 
 const getAllTours = (req, res) => {
   console.log(req.requestTime);
@@ -117,6 +121,41 @@ const DeleteTour = (req, res) => {
   });
 };
 
+const getAllUsers = (req, res) => {
+  res.status(500).json({
+    status: "error",
+    message: "This route is not yet defined",
+  });
+};
+
+const getUser = (req, res) => {
+  res.status(500).json({
+    status: "error",
+    message: "This route is not yet defined",
+  });
+};
+
+const createUsers = (req, res) => {
+  res.status(500).json({
+    status: "error",
+    message: "This route is not yet defined",
+  });
+};
+
+const updateUser = (req, res) => {
+  res.status(500).json({
+    status: "error",
+    message: "This route is not yet defined",
+  });
+};
+
+const deleteUser = (req, res) => {
+  res.status(500).json({
+    status: "error",
+    message: "This route is not yet defined",
+  });
+};
+
 //app.get("/api/v1/tours", getAllTours);
 
 // app.get("/api/v1/tours/:id", getTour);
@@ -127,13 +166,21 @@ const DeleteTour = (req, res) => {
 
 // app.delete("/api/v1/tours/:id", DeleteTour);
 
-app.route("/api/v1/tours").get(getAllTours).post(createTour);
+//3) Route
+// 3.1) Mounting router
+const tourRouter = express.Router();
+const userRouter = express.Router();
 
-app
-  .route("/api/v1/tours/:id")
-  .get(getTour)
-  .patch(updateTour)
-  .delete(DeleteTour);
+app.use("/api/v1/tours", tourRouter);
+tourRouter.route("/").get(getAllTours).post(createTour);
+
+tourRouter.route("/:id").get(getTour).patch(updateTour).delete(DeleteTour);
+
+userRouter.route("/").get(getAllUsers).post(createUsers);
+
+userRouter.route("/:id").get(getUser).patch(updateUser).delete(deleteUser);
+
+//4) Start Server
 
 const port = 3000;
 
