@@ -1,5 +1,6 @@
 const fs = require("fs");
 const express = require("express");
+const e = require("express");
 
 const app = express();
 
@@ -28,6 +29,27 @@ app.get("/api/v1/tours", (req, res) => {
     results: tours.length,
     data: {
       tours: tours,
+    },
+  });
+});
+
+app.get("/api/v1/tours/:id", (req, res) => {
+  // req.params will automatically variable to the parameter
+  console.log(req.params);
+  const id = req.params.id * 1;
+  if (id > tours.length) {
+    return res.status(404).json({
+      status: "fail",
+      message: "invalid Id",
+    });
+  }
+
+  const tour = tours.find((el) => el.id === id);
+  res.status(200).json({
+    status: "success",
+    results: tours.length,
+    data: {
+      tours: tour,
     },
   });
 });
