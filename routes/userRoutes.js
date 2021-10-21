@@ -1,7 +1,8 @@
 const express = require("express");
-const userController = require("./../controllers/userController")
-const app = express()
 const morgan = require('morgan')
+const userController = require("../controllers/userController")
+
+const app = express()
 
 app.use(morgan("dev"));
 app.use(express.json());
