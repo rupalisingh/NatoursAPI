@@ -27,7 +27,31 @@ const Tour = require("../models/tourModel");
 
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    // eslint-disable-next-line node/no-unsupported-features/es-syntax
+    const queryObj = {...req.query}
+    const excludedFields = ['page', 'sort', 'limit', 'fields']
+    excludedFields.forEach(el => delete queryObj[el ])
+    console.log(req.query, queryObj);
+
+    // const tours = await Tour.find(req.query)
+    const query =  Tour.find(queryObj)
+
+    // 1st way to filter query
+    // const tours = await Tour.find({
+    //   duration : 5,
+    //   difficulty : 'easy'
+    // });
+
+    // 2nd way to filter
+    // const tours = await Tour.find()
+    //   .where("duration")
+    //   .equals(5)
+    //   .where("difficulty")
+    //   .equals("easy");
+
+    // EXECUTE QUERY
+    const tours = await query
+
     res.status(200).json({
       status: "success",
       data: {
@@ -124,9 +148,9 @@ exports.createTour = async (req, res) => {
 
 exports.updateTour = async (req, res) => {
   try {
-    const updateTour = await Tour.findByIdAndUpdate(req.params.id, req.body,{
-      new : true
-    })
+    const updateTour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
     res.status(200).json({
       status: "success",
       data: {
@@ -137,23 +161,21 @@ exports.updateTour = async (req, res) => {
     res.status(404).json({
       status: "fail",
       message: err,
-    })
+    });
   }
-  
 };
 
 exports.DeleteTour = async (req, res) => {
-  try{
-    const deleteTour = await Tour.findByIdAndDelete(req.params.id)
+  try {
+    const deleteTour = await Tour.findByIdAndDelete(req.params.id);
     res.status(204).json({
       status: "success",
       data: null,
     });
   } catch (err) {
     res.status(404).json({
-      status : 'fail',
-      message : err
-    })
+      status: "fail",
+      message: err,
+    });
   }
-  
 };
