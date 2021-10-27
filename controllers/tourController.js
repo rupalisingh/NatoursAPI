@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
 /* eslint-disable no-unused-vars */
 const Tour = require("../models/tourModel");
 
@@ -31,19 +32,29 @@ exports.getAllTours = async (req, res) => {
 
     // BUILD QUERY
     // 1) FIltering
-    const queryObj = {...req.query}
-    const excludedFields = ['page', 'sort', 'limit', 'fields']
-    excludedFields.forEach(el => delete queryObj[el])
+    const queryObj = { ...req.query };
+    const excludedFields = ["page", "sort", "limit", "fields"];
+    excludedFields.forEach((el) => delete queryObj[el]);
     console.log(req.query, queryObj);
 
     // const tours = await Tour.find(req.query)
     // 2) Advanced Filtering
-    const query =  Tour.find(queryObj)
-    let queryStr = JSON.stringify(queryObj)
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`)
-    console.log(queryStr)
+    let query = Tour.find(queryObj);
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+    console.log(queryStr);
 
-    console.log(req.query)
+    //3) Sorting
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join(' ')
+      query = query.sort(req.query.sort);
+      // IF 2 items has same price - sort('price ratingAverage')
+    } else {
+      // Will sort the data on the baseis of createdAt if no sorting is specified
+      query = query.sort('-createdAt')
+    }
+
+    console.log(req.query);
 
     // 1st way to filter query
     // const tours = await Tour.find({
@@ -59,11 +70,11 @@ exports.getAllTours = async (req, res) => {
     //   .equals("easy");
 
     // EXECUTE QUERY
-    const tours = await query
+    const tours = await query;
 
     res.status(200).json({
       status: "success",
-      length : tours.length,
+      length: tours.length,
       data: {
         tours,
       },
