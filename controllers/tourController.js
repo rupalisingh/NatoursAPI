@@ -28,13 +28,22 @@ const Tour = require("../models/tourModel");
 exports.getAllTours = async (req, res) => {
   try {
     // eslint-disable-next-line node/no-unsupported-features/es-syntax
+
+    // BUILD QUERY
+    // 1) FIltering
     const queryObj = {...req.query}
     const excludedFields = ['page', 'sort', 'limit', 'fields']
-    excludedFields.forEach(el => delete queryObj[el ])
+    excludedFields.forEach(el => delete queryObj[el])
     console.log(req.query, queryObj);
 
     // const tours = await Tour.find(req.query)
+    // 2) Advanced Filtering
     const query =  Tour.find(queryObj)
+    let queryStr = JSON.stringify(queryObj)
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`)
+    console.log(queryStr)
+
+    console.log(req.query)
 
     // 1st way to filter query
     // const tours = await Tour.find({
@@ -54,6 +63,7 @@ exports.getAllTours = async (req, res) => {
 
     res.status(200).json({
       status: "success",
+      length : tours.length,
       data: {
         tours,
       },
