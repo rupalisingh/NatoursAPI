@@ -11,6 +11,8 @@ tourRouter.param('id', (req, res, next, val) => {
     next()
 })
 
+tourRouter.route('/top-5-cheap').get(tourControllers.aliasTopTours, tourControllers.getAllTours)
+
 tourRouter.route("/").get(tourControllers.getAllTours).post(tourControllers.createTour);
 
 tourRouter.route("/:id").get(tourControllers.getTour).patch(tourControllers.updateTour).delete(tourControllers.DeleteTour);

@@ -2,6 +2,13 @@
 /* eslint-disable no-unused-vars */
 const Tour = require("../models/tourModel");
 
+exports.aliasTopTours = (req, res, next) => {
+  req.query.limit = '5'
+  req.query.sort = '-ratingAvverage, price'
+  req.query.fields = 'name,price,ratingsAvverage, summary, difficulty'
+  next()
+}
+
 // const tours = JSON.parse(fs.readFileSync("./dev-data/data/tours-simple.json"));
 
 // exports.checkId = (req, res, next, val) => {
