@@ -1,7 +1,7 @@
 /* eslint-disable node/no-unsupported-features/es-syntax */
 /* eslint-disable no-unused-vars */
 const Tour = require("../models/tourModel");
-const APIFeatures = require('../utils/apiFeatures')
+const APIFeatures = require("../utils/apiFeatures");
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = "5";
@@ -9,8 +9,6 @@ exports.aliasTopTours = (req, res, next) => {
   req.query.fields = "name,price,ratingsAvverage, summary, difficulty";
   next();
 };
-
-
 
 // const tours = JSON.parse(fs.readFileSync("./dev-data/data/tours-simple.json"));
 
@@ -227,6 +225,44 @@ exports.DeleteTour = async (req, res) => {
     res.status(204).json({
       status: "success",
       data: null,
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err,
+    });
+  }
+};
+
+exports.getTourStats = async (req, res) => {
+  try {
+    const stats = await Tour.aggregate([
+      {
+        $match: { ratingsAvverage: { $gte: 4.5 } },
+      },
+      {
+        $group: {
+          _id: { $toUpper : 'difficulty'},
+          numTours : {$sum : 1},
+          numRatings : { $sum : '$ratingsQuantity'},
+          avgRating: { $avg: '$ratingsAvverage' },
+          avgPrice: { $avg: "$price" },
+          minPrice: { $min: "$price" },
+          maxPrice: { $max: "$price" },
+        },
+      },
+      {
+        $sort : { avgPrice : 1 }
+      },
+      {
+        $match : {_id : {$ne : 'EASY'} }
+      }
+    ]);
+    res.status(200).json({
+      status: "success",
+      data: {
+        "stats" : stats,
+      },
     });
   } catch (err) {
     res.status(404).json({
