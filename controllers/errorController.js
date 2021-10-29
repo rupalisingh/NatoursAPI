@@ -1,3 +1,11 @@
+/* eslint-disable prefer-const */
+/* eslint-disable node/no-unsupported-features/es-syntax */
+
+const handleCasteErrorDB = (err) => {
+  const message = `Invalid ${err.path} : ${err.value}`;
+  return new AppError(message, 400);
+};
+
 const sendErrorForDEv = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -35,6 +43,9 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === "development") {
     sendErrorForDEv(err, res);
   } else if (process.env.NODE_ENV === "production") {
-    sendErrorForProd(req, res);
+    let error = { ...err };
+    if (error.name === "CastError") err = handleCasteErrorDB(err);
+
+    sendErrorForProd(error, res);
   }
 };
