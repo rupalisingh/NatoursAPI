@@ -109,13 +109,22 @@ tourSchema.post("save", function (doc, next) {
 // Will include all the queries that start with Find
 tourSchema.pre(/^find/, function (next) {
   this.find({ secretTour: { $ne: true } });
-  this.start = Date.now()
+  this.start = Date.now();
   next();
 });
 
 tourSchema.post(/^find/, function (doc, next) {
-  console.log(`Query took ${Date.now()-this.start} milliseconds!`)
+  console.log(`Query took ${Date.now() - this.start} milliseconds!`);
   console.log(docs);
+  next();
+});
+
+// AGGREGATION MIDDLEWARE
+
+tourSchema.pre("aggregate", function (next) {
+  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+  // this keyword will point to the current aggregation object
+  console.log(this.pipeline());
   next();
 });
 
