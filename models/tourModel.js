@@ -3,6 +3,7 @@
 /* eslint-disable prefer-arrow-callback */
 const mongoose = require("mongoose");
 const slugify = require("slugify");
+const validator = require('validator')
 
 // Describing a Schema
 
@@ -13,8 +14,9 @@ const tourSchema = new mongoose.Schema(
       required: [true, "A tour must have a name"],
       unique: true,
       trim: true,
-      maxlength : [40, 'A tour name must have less orequal than 40 characters'],
-      minlength : [10, 'A tour must have more or equal to 10 characters']
+      maxlength: [40, "A tour name must have less orequal than 40 characters"],
+      minlength: [10, "A tour must have more or equal to 10 characters"],
+      validate : [validator.isAlpha, 'Tour name must only contain characters']
     },
     slug: {
       type: String,
@@ -30,16 +32,16 @@ const tourSchema = new mongoose.Schema(
     difficulty: {
       type: String,
       required: [true, "A tour must have a difficulty"],
-      enum :{
-       values : ['easy', 'medium', 'difficult'],
-       message : 'Difficulty can be easy, medium or difficult'
-      } 
+      enum: {
+        values: ["easy", "medium", "difficult"],
+        message: "Difficulty can be easy, medium or difficult",
+      },
     },
     ratingsAvverage: {
       type: Number,
       default: 4.5,
-      min : [1, 'Rating must be above 1'],
-      max : [5, 'Rating must be below 5'],
+      min: [1, "Rating must be above 1"],
+      max: [5, "Rating must be below 5"],
     },
     ratingsQuantity: {
       type: Number,
@@ -51,6 +53,15 @@ const tourSchema = new mongoose.Schema(
     },
     priceDiscount: {
       type: Number,
+      // Custom Validator
+      // this keyword only points to current doc on NEW DOCUMENT CREATION
+      validate: {
+        validator: function (val) {
+          return val < this.price;
+        },
+
+        message: "Discount price ({VALUE}) should be below regular prize",
+      },
     },
     summary: {
       type: String,
