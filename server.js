@@ -20,8 +20,6 @@ mongoose
     console.log(err);
   });
 
-
-
 // // Creating document
 // const testTour = new Tour({
 //   name: "The Parkk Camper",
@@ -43,6 +41,14 @@ mongoose
 
 const port = 3000;
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`App running on port ${port}...`);
+});
+
+process.on("unhandledRejection", (err) => {
+  console.log(err.name, err.message);
+  console.log("UNHANDLED REJECTION. Shutting Down....");
+  server.close(() => {
+    process.exit(1);
+  });
 });
