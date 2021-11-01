@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken')
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 
+
+// Creating a common catch block for alll functions, to prevent repetitiveness
 exports.signUp = catchAsync(async (req, res, next) => {
   // Creating security issue, since anyone can register them as admin
   //const newUser = await User.create(req.body);
@@ -23,3 +25,16 @@ exports.signUp = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+
+exports.login = (req, res, next) => {
+    const {email, password, passwordConfirm} = req.body
+
+    //1) Check if email and password exist
+if(!)
+
+    // 2) CHeck if the user exist and password is correct
+
+
+    // 3) If everything ok, send token to client
+}
