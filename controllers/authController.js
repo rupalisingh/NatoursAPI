@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
-
+const AppError = require("../utils/appError");
 
 // Creating a common catch block for alll functions, to prevent repetitiveness
 exports.signUp = catchAsync(async (req, res, next) => {
@@ -15,7 +15,9 @@ exports.signUp = catchAsync(async (req, res, next) => {
   });
 
   // Logging the user into the application using jsonwebtoken right after signing up
-  const token = jwt.sign({id : newUser._id}, process.env.JWT_SECRET, {expiresIn : process.env.JWT_EXPIRES_IN})
+  const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
 
   res.status(200).json({
     status: "success",
@@ -26,15 +28,23 @@ exports.signUp = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.login = catchAsync( async(req, res, next) => {
+  const { email, password, passwordConfirm } = req.body;
 
-exports.login = (req, res, next) => {
-    const {email, password, passwordConfirm} = req.body
+  //1) Check if email and password exist
+  if (!email || !password) {
+    return next(new AppError("Please provide Email and Password", 400));
+  }
 
-    //1) Check if email and password exist
-if(!)
+  // 2) CHeck if the user exist and password is correct
+  const user = User.findOne({email : email}).select('+password')
 
-    // 2) CHeck if the user exist and password is correct
+  console.log(user)
 
-
-    // 3) If everything ok, send token to client
-}
+  // 3) If everything ok, send token to client
+  const token = ''
+  res.status(200).json({
+    status : 'success',
+    token
+  })
+});
