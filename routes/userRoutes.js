@@ -13,7 +13,7 @@ userRouter.post("/signup", authController.signUp);
 userRouter.post('/login', authController.login)
 
 userRouter.post('/forgotPassword', authController.forgotPassword)
-userRouter.post('/ResetPassword', authController.resetPassword)
+userRouter.post('/ResetPassword/:token', authController.resetPassword)
 
 
 userRouter
