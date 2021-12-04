@@ -10,11 +10,16 @@ app.use(express.json());
 const userRouter = express.Router();
 
 userRouter.post("/signup", authController.signUp);
-userRouter.post('/login', authController.login)
+userRouter.post("/login", authController.login);
 
-userRouter.post('/forgotPassword', authController.forgotPassword)
-userRouter.post('/ResetPassword/:token', authController.resetPassword)
-
+userRouter.post("/forgotPassword", authController.forgotPassword);
+userRouter.patch("/ResetPassword/:token", authController.resetPassword);
+userRouter.patch(
+  "/updateMyPassword",
+  authController.protect,
+  authController.updatePassword
+);
+userRouter.patch("/updateMe", authController.protect, authController.updateMe);
 
 userRouter
   .route("/")
