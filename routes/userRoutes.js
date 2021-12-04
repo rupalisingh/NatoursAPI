@@ -20,7 +20,7 @@ userRouter.patch(
   authController.updatePassword
 );
 userRouter.patch("/updateMe", authController.protect, authController.updateMe);
-
+userRouter.delete("/deleteMe", authController.protect, authController.deleteMe)
 userRouter
   .route("/")
   .get(userController.getAllUsers)
