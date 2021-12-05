@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const userController = require("../controllers/userController");
 const authController = require("../controllers/authController");
+const reviewController = require("../controllers/reviewController");
 
 const app = express();
 
@@ -20,7 +21,7 @@ userRouter.patch(
   authController.updatePassword
 );
 userRouter.patch("/updateMe", authController.protect, authController.updateMe);
-userRouter.delete("/deleteMe", authController.protect, authController.deleteMe)
+userRouter.delete("/deleteMe", authController.protect, authController.deleteMe);
 userRouter
   .route("/")
   .get(userController.getAllUsers)
@@ -31,5 +32,6 @@ userRouter
   .get(userController.getUser)
   .patch(userController.updateUser)
   .delete(userController.deleteUser);
+
 
 module.exports = userRouter;
