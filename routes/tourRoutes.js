@@ -1,8 +1,8 @@
 const express = require("express");
 const tourControllers = require("../controllers/tourController");
-const authController = require("../controllers/authController")
+const authController = require("../controllers/authController");
 //const reviewController = require("../controllers/reviewController")
-const reviewRouter = require("../routes/reviewRoutes")
+const reviewRouter = require("../routes/reviewRoutes");
 
 const tourRouter = express.Router();
 
@@ -12,7 +12,6 @@ tourRouter.param("id", (req, res, next, val) => {
   console.log(`Tour id is :${val}`);
   next();
 });
-
 
 //Nested Routes
 // POST //tour/234gjsdlf/reviews
@@ -27,28 +26,42 @@ tourRouter.param("id", (req, res, next, val) => {
 //     reviewController.createReview
 //   );
 // Using Express for nested Routes
-tourRouter.use('/:tourId/reviews', reviewRouter)
+tourRouter.use("/:tourId/reviews", reviewRouter);
 
 tourRouter
   .route("/top-5-cheap")
   .get(tourControllers.aliasTopTours, tourControllers.getAllTours);
 
 tourRouter.route("/tour-stats").get(tourControllers.getTourStats);
-tourRouter.route("/monthly-plan/:year").get(tourControllers.getMonthlyPlan);
-
+tourRouter
+  .route("/monthly-plan/:year")
+  .get(
+    authController.protect,
+    authController.restrictTo("admin", "lead-guide", "guide"),
+    tourControllers.getMonthlyPlan
+  );
 
 tourRouter
   .route("/")
-  .get(authController.protect, tourControllers.getAllTours)
-  .post(tourControllers.createTour);
+  .get(tourControllers.getAllTours)
+  .post(
+    authController.protect,
+    authController.restrictTo("admin", "lead-guide"),
+    tourControllers.createTour
+  );
 
 tourRouter
   .route("/:id")
   .get(tourControllers.getTour)
-  .patch(tourControllers.updateTour)
-  .delete(authController.protect, authController.restrictTo('admin', 'lead-guide'), tourControllers.DeleteTour);
-
-
-
+  .patch(
+    authController.protect,
+    authController.restrictTo("admin", "lead-guide"),
+    tourControllers.updateTour
+  )
+  .delete(
+    authController.protect,
+    authController.restrictTo("admin", "lead-guide"),
+    tourControllers.DeleteTour
+  );
 
 module.exports = tourRouter;
