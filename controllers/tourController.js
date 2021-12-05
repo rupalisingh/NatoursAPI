@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable node/no-unsupported-features/es-syntax */
 /* eslint-disable no-unused-vars */
+const factory = require("./handlerFactory")
 const Tour = require("../models/tourModel");
 const APIFeatures = require("../utils/apiFeatures");
 const AppError = require("../utils/appError");
@@ -166,19 +167,21 @@ exports.getTour = async (req, res) => {
   // });
 };
 
-exports.createTour = catchAsync(async (req, res, next) => {
-  // const newTours = new Tour({})
-  // newTours.save()
-  const newTour = await Tour.create(req.body);
-  res.status(201).json({
-    status: "success",
-    data: {
-      data: {
-        tour: newTour,
-        runValidators: true,
-      },
-    },
-  });
+// exports.createTour = catchAsync(async (req, res, next) => {
+//   // const newTours = new Tour({})
+//   // newTours.save()
+//   const newTour = await Tour.create(req.body);
+//   res.status(201).json({
+//     status: "success",
+//     data: {
+//       data: {
+//         tour: newTour,
+//         runValidators: true,
+//       },
+//     },
+//   });
+
+exports.createTour = factory.createOne(Tour)
 
   // try {
 
@@ -208,46 +211,50 @@ exports.createTour = catchAsync(async (req, res, next) => {
 //   }
 // );
 
-exports.updateTour = async (req, res) => {
-  try {
-    const updateTour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!tour) {
-      return next(new AppError("No tour found with that id", 404));
-    }
-    res.status(200).json({
-      status: "success",
-      data: {
-        tour: updateTour,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: "fail",
-      message: err,
-    });
-  }
-};
+// exports.updateTour = async (req, res) => {
+//   try {
+//     const updateTour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+//       new: true,
+//       runValidators: true,
+//     });
+//     if (!tour) {
+//       return next(new AppError("No tour found with that id", 404));
+//     }
+//     res.status(200).json({
+//       status: "success",
+//       data: {
+//         tour: updateTour,
+//       },
+//     });
+//   } catch (err) {
+//     res.status(404).json({
+//       status: "fail",
+//       message: err,
+//     });
+//   }
+// };
 
-exports.DeleteTour = async (req, res) => {
-  try {
-    const deleteTour = await Tour.findByIdAndDelete(req.params.id);
-    if (!deleteTour) {
-      return next(new AppError("No tour found with that id", 404));
-    }
-    res.status(204).json({
-      status: "success",
-      data: null,
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: "fail",
-      message: err,
-    });
-  }
-};
+exports.updateTour = factory.updateOne(Tour)
+
+// exports.DeleteTour = async (req, res) => {
+//   try {
+//     const deleteTour = await Tour.findByIdAndDelete(req.params.id);
+//     if (!deleteTour) {
+//       return next(new AppError("No tour found with that id", 404));
+//     }
+//     res.status(204).json({
+//       status: "success",
+//       data: null,
+//     });
+//   } catch (err) {
+//     res.status(404).json({
+//       status: "fail",
+//       message: err,
+//     });
+//   }
+// };
+
+exports.DeleteTour = factory.deleteOne(Tour)   // Using handlerFactory to prevent repititive code - works because of closure
 
 exports.getTourStats = async (req, res) => {
   try {
