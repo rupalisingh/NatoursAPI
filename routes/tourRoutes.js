@@ -1,7 +1,8 @@
 const express = require("express");
 const tourControllers = require("../controllers/tourController");
 const authController = require("../controllers/authController")
-const reviewController = require("../controllers/reviewController")
+//const reviewController = require("../controllers/reviewController")
+const reviewRouter = require("../routes/reviewRoutes")
 
 const tourRouter = express.Router();
 
@@ -11,6 +12,22 @@ tourRouter.param("id", (req, res, next, val) => {
   console.log(`Tour id is :${val}`);
   next();
 });
+
+
+//Nested Routes
+// POST //tour/234gjsdlf/reviews
+// GET/ tour/2flgjff/reviews
+// GET/tour/sff234jfld/reviews/sdfhs2334f
+
+// tourRouter
+//   .route(":/tourId/reviews")
+//   .post(
+//     authController.protect,
+//     authController.restrictTo("user"),
+//     reviewController.createReview
+//   );
+// Using Express for nested Routes
+tourRouter.use('/:tourId/reviews', reviewRouter)
 
 tourRouter
   .route("/top-5-cheap")
@@ -32,18 +49,6 @@ tourRouter
   .delete(authController.protect, authController.restrictTo('admin', 'lead-guide'), tourControllers.DeleteTour);
 
 
-//Nested Routes
-// POST //tour/234gjsdlf/reviews
-// GET/ tour/2flgjff/reviews
-// GET/tour/sff234jfld/reviews/sdfhs2334f
-
-tourRouter
-  .route(":/tourId/reviews")
-  .post(
-    authController.protect,
-    authController.restrictTo("user"),
-    reviewController.createReview
-  );
 
 
 module.exports = tourRouter;
