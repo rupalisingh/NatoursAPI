@@ -135,7 +135,7 @@ exports.getAllTours = async (req, res) => {
 
 exports.getTour = async (req, res) => {
   try {
-    const tour = await Tour.findById(req.params.id)
+    const tour = await Tour.findById(req.params.id).populate('reviews')
     if (!tour) {
       return next(new AppError("No tour found with that id", 404));
     }
