@@ -1,6 +1,7 @@
 const fs = require("fs");
 const mongoose = require("mongoose");
 const dotnev = require("dotenv");
+const path = require('path')
 const Tour = require("../../models/tourModel");
 
 dotnev.config({ path: "./config.env" });
@@ -22,7 +23,7 @@ mongoose
   });
 
 // Read Json File
-const tours = fs.readFileSync("tours.json", "utf-8");
+const tours = JSON.parse(fs.readFileSync(path.join(__dirname ,'/tours.json'), "utf-8"));
 
 // Import DATA into DB
 const importData = async () => {
@@ -46,7 +47,7 @@ const deleteData = async () => {
   process.exit();
 };
 
-console.log(process.argv);
+//console.log(process.argv);
 
 if (process.argv[2] === "---import") {
   importData();
