@@ -135,9 +135,9 @@ exports.getAllTours = async (req, res) => {
 
 exports.getTour = async (req, res) => {
   try {
-    const tour = await Tour.findById(req.params.id);
-    if(!tour) {
-     return next(new AppError('No tour found with that id', 404))
+    const tour = await Tour.findById(req.params.id)
+    if (!tour) {
+      return next(new AppError("No tour found with that id", 404));
     }
     //Tours.findOne({_id : req.params.id})
     res.status(200).json({
@@ -214,9 +214,9 @@ exports.updateTour = async (req, res) => {
       new: true,
       runValidators: true,
     });
-    if(!tour) {
-      return next(new AppError('No tour found with that id', 404))
-     }
+    if (!tour) {
+      return next(new AppError("No tour found with that id", 404));
+    }
     res.status(200).json({
       status: "success",
       data: {
@@ -234,9 +234,9 @@ exports.updateTour = async (req, res) => {
 exports.DeleteTour = async (req, res) => {
   try {
     const deleteTour = await Tour.findByIdAndDelete(req.params.id);
-    if(!deleteTour) {
-      return next(new AppError('No tour found with that id', 404))
-     }
+    if (!deleteTour) {
+      return next(new AppError("No tour found with that id", 404));
+    }
     res.status(204).json({
       status: "success",
       data: null,
