@@ -47,6 +47,8 @@ tourRouter
 // /tours-distance?distance=223&center=-40,45&unit=mi
 // /tours-distance/223/center/-40,45/unit/mi
 
+tourRouter.route('/distances/:latlng/unit/:unit').get(tourControllers.getDistances)
+
 tourRouter
   .route("/")
   .get(tourControllers.getAllTours)

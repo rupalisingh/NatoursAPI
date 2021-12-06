@@ -191,12 +191,12 @@ tourSchema.post(/^find/, function (doc, next) {
 
 // AGGREGATION MIDDLEWARE
 
-tourSchema.pre("aggregate", function (next) {
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
-  // this keyword will point to the current aggregation object
-  console.log(this.pipeline());
-  next();
-});
+// tourSchema.pre("aggregate", function (next) {
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+//   // this keyword will point to the current aggregation object
+//   console.log(this.pipeline());
+//   next();
+// });
 
 // Creating model
 
