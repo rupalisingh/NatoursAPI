@@ -42,6 +42,12 @@ tourRouter
   );
 
 tourRouter
+  .route("/tours-within/:distance/center/:latlng/unit/:unit")
+  .get(tourControllers.getTourWithin);
+// /tours-distance?distance=223&center=-40,45&unit=mi
+// /tours-distance/223/center/-40,45/unit/mi
+
+tourRouter
   .route("/")
   .get(tourControllers.getAllTours)
   .post(
